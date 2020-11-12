@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"mcCoordsBot/locations"
@@ -34,11 +33,12 @@ var (
 )
 
 func init() {
+	var err error
+
 	Token = os.Getenv("DISCORD_TOKEN")
 
 	log.SetFlags(log.Lshortfile)
 
-	var err error
 	lmap, err = locations.Load(FileName)
 	if err != nil {
 		lmap = locations.New()
@@ -131,10 +131,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("`Couldn't delete because: %s`", err.Error()))
 			return
 		}
-		s.ChannelMessageSend(m.ChannelID, "Deleted "+name+"!")
+		s.ChannelMessageSend(m.ChannelID, "`Deleted "+name+"!`")
 
 	} else if parts[0] == CmdPrefix+CmdList {
-		s.ChannelMessageSend(m.ChannelID, "```"+lmap.ToString()+"```")
+		list := lmap.ToString()
+		if len(list) < 1 {
+			list = "Use #save to add a location!"
+		}
+		s.ChannelMessageSend(m.ChannelID, "```"+list+"```")
 	} else if parts[0] == CmdPrefix+CmdHelp {
 		s.ChannelMessageSend(m.ChannelID, CmdHelpBody)
 	}
