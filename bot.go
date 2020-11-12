@@ -11,7 +11,6 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
 )
 
 const (
@@ -36,10 +35,6 @@ var (
 func init() {
 	var err error
 
-	err = godotenv.Load()
-	if err != nil {
-		log.Fatalf("Environment couldn't be loaded: %s\n", err.Error())
-	}
 	Token = os.Getenv("DISCORD_TOKEN")
 
 	log.SetFlags(log.Lshortfile)
