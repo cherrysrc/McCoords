@@ -135,10 +135,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	} else if parts[0] == CmdPrefix+CmdList {
 		list := lmap.ToString()
-		if list == "" {
+		if len(list) < 1 {
 			list = "Use #save to add a location!"
 		}
-		s.ChannelMessageSend(m.ChannelID, "```"+lmap.ToString()+"```")
+		s.ChannelMessageSend(m.ChannelID, "```"+list+"```")
 	} else if parts[0] == CmdPrefix+CmdHelp {
 		s.ChannelMessageSend(m.ChannelID, CmdHelpBody)
 	}
