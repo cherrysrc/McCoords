@@ -131,7 +131,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("`Couldn't delete because: %s`", err.Error()))
 			return
 		}
-		s.ChannelMessageSend(m.ChannelID, "Deleted "+name+"!")
+		s.ChannelMessageSend(m.ChannelID, "`Deleted "+name+"!`")
 
 	} else if parts[0] == CmdPrefix+CmdList {
 		s.ChannelMessageSend(m.ChannelID, "```"+lmap.ToString()+"```")
