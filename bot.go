@@ -34,8 +34,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&Token, "t", "", "Bot Token")
-	flag.Parse()
+	Token = os.Getenv("DISCORD_TOKEN")
 
 	log.SetFlags(log.Lshortfile)
 
