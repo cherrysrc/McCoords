@@ -134,6 +134,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, "`Deleted "+name+"!`")
 
 	} else if parts[0] == CmdPrefix+CmdList {
+		list := lmap.ToString()
+		if list == "" {
+			list = "Use #save to add a location!"
+		}
 		s.ChannelMessageSend(m.ChannelID, "```"+lmap.ToString()+"```")
 	} else if parts[0] == CmdPrefix+CmdHelp {
 		s.ChannelMessageSend(m.ChannelID, CmdHelpBody)
