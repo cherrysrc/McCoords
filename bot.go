@@ -9,21 +9,25 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 const (
 	FileName    string = "locations.json"
+	Version     string = "V1.1"
 	CmdPrefix   string = "#"
 	CmdSave     string = "save"
 	CmdDelete   string = "delete"
 	CmdList     string = "list"
+	CmdVersion  string = "version"
 	CmdHelp     string = "help"
 	CmdHelpBody string = "```" + "#save <name> <x> <y> <z>: save a location\n" +
 		"#delete <name>: delete a location\n" +
 		"#list: Show all saved locations\n" +
 		"#help: Display help\n" +
+		"#version: Display bot version\n" +
 		"```"
 )
 
@@ -31,6 +35,24 @@ var (
 	Token string
 	lmap  locations.LocationMap
 )
+
+//Calls a function every 'delay' time units
+func repeat(fn func(), delay time.Duration) chan bool {
+	stop := make(chan bool)
+
+	go func() {
+		for {
+			fn()
+			select {
+			case <-time.After(delay):
+			case <-stop:
+				return
+			}
+		}
+	}()
+
+	return stop
+}
 
 func init() {
 	var err error
@@ -64,12 +86,17 @@ func main() {
 		return
 	}
 
+	stop := repeat(func() {
+		lmap.Save(FileName)
+	}, time.Minute*5)
+
 	log.Printf("Bot is running...\n")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
 	lmap.Save(FileName)
+	stop <- true
 	dg.Close()
 }
 
@@ -139,6 +166,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			list = "Use #save to add a location!"
 		}
 		s.ChannelMessageSend(m.ChannelID, "```"+list+"```")
+	} else if parts[0] == CmdPrefix+CmdVersion {
+		s.ChannelMessageSend(m.ChannelID, "`"+CmdVersion+"`")
 	} else if parts[0] == CmdPrefix+CmdHelp {
 		s.ChannelMessageSend(m.ChannelID, CmdHelpBody)
 	}
