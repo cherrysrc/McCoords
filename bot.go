@@ -167,7 +167,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		s.ChannelMessageSend(m.ChannelID, "```"+list+"```")
 	} else if parts[0] == CmdPrefix+CmdVersion {
-		s.ChannelMessageSend(m.ChannelID, "`"+CmdVersion+"`")
+		s.ChannelMessageSend(m.ChannelID, "`"+Version+"`")
 	} else if parts[0] == CmdPrefix+CmdHelp {
 		s.ChannelMessageSend(m.ChannelID, CmdHelpBody)
 	}
