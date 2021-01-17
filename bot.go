@@ -88,7 +88,7 @@ func main() {
 
 	stop := repeat(func() {
 		lmap.Save(FileName)
-	}, time.Minute*5)
+	}, time.Minute*30)
 
 	log.Printf("Bot is running...\n")
 	sc := make(chan os.Signal, 1)
