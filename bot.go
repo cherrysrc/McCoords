@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -56,6 +57,11 @@ func repeat(fn func(), delay time.Duration) chan bool {
 
 func init() {
 	var err error
+
+	err = godotenv.Load(".env")
+	if err != nil {
+		log.Printf("Could not load .env file: %s\n", err.Error())
+	}
 
 	Token = os.Getenv("DISCORD_TOKEN")
 
